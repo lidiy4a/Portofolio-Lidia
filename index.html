@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discover Bali - Destinasi Wisata Terbaik</title>
+    <meta name="description" content="Jelajahi keindahan Bali dengan panduan wisata terlengkap. Temukan destinasi, budaya, dan pengalaman tak terlupakan di Pulau Dewata.">
+    <meta name="keywords" content="Bali, wisata, destinasi, budaya, pantai, gunung, temple">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        .parallax {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .dark .bg-white { background-color: #1f2937; }
+        .dark .text-gray-900 { color: #f9fafb; }
+        .dark .text-gray-600 { color: #d1d5db; }
+        .dark .bg-gray-50 { background-color: #374151; }
+        .dark .border-gray-200 { border-color: #4b5563; }
+        
+        .video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        
+        .chatbot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .weather-widget {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .carousel-container {
+            overflow: hidden;
+        }
+        
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="font-sans transition-colors duration-300">
+    <!-- Header / Navbar -->
+    <header class="fixed top-0 w-full bg-white/90 backdrop-blur-md shadow-lg z-50 transition-colors duration-300">
+        <nav class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-mountain text-2xl text-orange-500"></i>
+                    <span class="text-xl font-bold text-gray-900">Discover Bali</span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#home" class="text-gray-700 hover:text-orange-500 transition-colors">Beranda</a>
+                    <a href="#destinations" class="text-gray-700 hover:text-orange-500 transition-colors">Destinasi</a>
+                    <a href="#gallery" class="text-gray-700 hover:text-orange-500 transition-colors">Galeri</a>
+                    <a href="#events" class="text-gray-700 hover:text-orange-500 transition-colors">Event</a>
+                    <a href="#blog" class="text-gray-700 hover:text-orange-500 transition-colors">Blog</a>
+                    <a href="#contact" class="text-gray-700 hover:text-orange-500 transition-colors">Kontak</a>
+                </div>
+                
+                <!-- Search Bar -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Cari destinasi..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    
+                    <!-- Language Switcher -->
+                    <select id="languageSwitch" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <option value="id">🇮🇩 ID</option>
+                        <option value="en">🇺🇸 EN</option>
+                    </select>
+                    
+                    <!-- Dark Mode Toggle -->
+                    <button id="darkModeToggle" class="p-2 rounded-full hover:bg-gray-100 transition-colors">
+                        <i class="fas fa-moon text-gray-700"></i>
+                    </button>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden p-2">
+                    <i class="fas fa-bars text-gray-700"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="md:hidden hidden mt-4 pb-4">
+                <div class="flex flex-col space-y-3">
+                    <a href="#home" class="text-gray-700 hover:text-orange-500 transition-colors">Beranda</a>
+                    <a href="#destinations" class="text-gray-700 hover:text-orange-500 transition-colors">Destinasi</a>
+                    <a href="#gallery" class="text-gray-700 hover:text-orange-500 transition-colors">Galeri</a>
+                    <a href="#events" class="text-gray-700 hover:text-orange-500 transition-colors">Event</a>
+                    <a href="#blog" class="text-gray-700 hover:text-orange-500 transition-colors">Blog</a>
+                    <a href="#contact" class="text-gray-700 hover:text-orange-500 transition-colors">Kontak</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-orange-500/70 to-pink-500/70 z-10"></div>
+        <div class="absolute inset-0 parallax" style="background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 800%22><defs><linearGradient id=%22bg%22 x1=%220%25%22 y1=%220%25%22 x2=%22100%25%22 y2=%22100%25%22><stop offset=%220%25%22 style=%22stop-color:%23ff7e5f%22/><stop offset=%22100%25%22 style=%22stop-color:%23feb47b%22/></linearGradient></defs><rect width=%221200%22 height=%22800%22 fill=%22url(%23bg)%22/><path d=%22M0,400 Q300,200 600,400 T1200,400 L1200,800 L0,800 Z%22 fill=%22%23ffffff%22 opacity=%220.1%22/></svg>')"></div>
+        
+        <div class="relative z-20 text-center text-white px-4 max-w-4xl mx-auto">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 fade-in float-animation">
+                Selamat Datang di Bali
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 fade-in" style="animation-delay: 0.2s">
+                Jelajahi keindahan Pulau Dewata dengan pengalaman tak terlupakan
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center fade-in" style="animation-delay: 0.4s">
+                <button onclick="openVideoModal()" class="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-full font-semibold transition-all transform hover:scale-105">
+                    <i class="fas fa-play mr-2"></i>Tonton Video
+                </button>
+                <button onclick="startVirtualTour()" class="bg-transparent border-2 border-white text-white hover:bg-white hover:text-orange-500 px-8 py-3 rounded-full font-semibold transition-all">
+                    <i class="fas fa-vr-cardboard mr-2"></i>Virtual Tour 360°
+                </button>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
+            <i class="fas fa-chevron-down text-2xl"></i>
+        </div>
+    </section>
+
+    <!-- Weather Widget -->
+    <section class="weather-widget text-white py-6">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <i class="fas fa-sun text-3xl"></i>
+                    <div>
+                        <h3 class="font-semibold">Cuaca Hari Ini</h3>
+                        <p class="text-sm opacity-90">Denpasar, Bali</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <div class="text-3xl font-bold">28°C</div>
+                    <div class="text-sm opacity-90">Cerah Berawan</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Counter -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="fade-in">
+                    <div class="text-4xl font-bold text-orange-500 counter" data-target="150">0</div>
+                    <div class="text-gray-600 mt-2">Destinasi Wisata</div>
+                </div>
+                <div class="fade-in">
+                    <div class="text-4xl font-bold text-orange-500 counter" data-target="50000">0</div>
+                    <div class="text-gray-600 mt-2">Pengunjung/Bulan</div>
+                </div>
+                <div class="fade-in">
+                    <div class="text-4xl font-bold text-orange-500 counter" data-target="4.8">0</div>
+                    <div class="text-gray-600 mt-2">Rating Kepuasan</div>
+                </div>
+                <div class="fade-in">
+                    <div class="text-4xl font-bold text-orange-500 counter" data-target="25">0</div>
+                    <div class="text-gray-600 mt-2">Tahun Pengalaman</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content with Sidebar -->
+    <div class="flex flex-col lg:flex-row">
+        <!-- Main Content -->
+        <main class="flex-1">
+            <!-- Destinations Section -->
+            <section id="destinations" class="py-16 bg-white">
+                <div class="container mx-auto px-4">
+                    <div class="text-center mb-12 fade-in">
+                        <h2 class="text-4xl font-bold text-gray-900 mb-4">Destinasi Populer</h2>
+                        <p class="text-gray-600 max-w-2xl mx-auto">Temukan keindahan Bali melalui destinasi-destinasi terbaik yang wajib dikunjungi</p>
+                    </div>
+                    
+                    <!-- Filter Categories -->
+                    <div class="flex flex-wrap justify-center gap-4 mb-12">
+                        <button class="filter-btn active bg-orange-500 text-white px-6 py-2 rounded-full" data-filter="all">Semua</button>
+                        <button class="filter-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-full hover:bg-orange-500 hover:text-white transition-colors" data-filter="beach">Pantai</button>
+                        <button class="filter-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-full hover:bg-orange-500 hover:text-white transition-colors" data-filter="temple">Pura</button>
+                        <button class="filter-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-full hover:bg-orange-500 hover:text-white transition-colors" data-filter="mountain">Gunung</button>
+                        <button class="filter-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-full hover:bg-orange-500 hover:text-white transition-colors" data-filter="culture">Budaya</button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="destinationGrid">
+                        <!-- Destination Card 1 -->
+                        <div class="destination-card bg-white rounded-lg shadow-lg overflow-hidden fade-in" data-category="beach">
+                            <div class="relative h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                                <i class="fas fa-umbrella-beach text-6xl text-white opacity-50"></i>
+                                <div class="absolute top-4 right-4">
+                                    <button class="bg-white/20 backdrop-blur-sm text-white p-2 rounded-full hover:bg-white/30 transition-colors">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">Pantai Kuta</h3>
+                                <p class="text-gray-600 mb-4">Pantai terkenal dengan sunset yang memukau dan ombak yang cocok untuk surfing</p>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center text-yellow-500">
+                                        <i class="fas fa-star"></i>
+                                        <span class="ml-1 text-gray-600">4.5 (1,234)</span>
+                                    </div>
+                                    <button class="bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-orange-600 transition-colors">
+                                        Lihat Detail
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Destination Card 2 -->
+                        <div class="destination-card bg-white rounded-lg shadow-lg overflow-hidden fade-in" data-category="temple">
+                            <div class="relative h-48 bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center">
+                                <i class="fas fa-torii-gate text-6xl text-white opacity-50"></i>
+                                <div class="absolute top-4 right-4">
+                                    <button class="bg-white/20 backdrop-blur-sm text-white p-2 rounded-full hover:bg-white/30 transition-colors">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">Pura Tanah Lot</h3>
+                                <p class="text-gray-600 mb-4">Pura ikonik yang berdiri di atas batu karang di tengah laut</p>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center text-yellow-500">
+                                        <i class="fas fa-star"></i>
+                                        <span class="ml-1 text-gray-600">4.8 (2,156)</span>
+                                    </div>
+                                    <button class="bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-orange-600 transition-colors">
+                                        Lihat Detail
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Destination Card 3 -->
+                        <div class="destination-card bg-white rounded-lg shadow-lg overflow-hidden fade-in" data-category="mountain">
+                            <div class="relative h-48 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
+                                <i class="fas fa-mountain text-6xl text-white opacity-50"></i>
+                                <div class="absolute top-4 right-4">
+                                    <button class="bg-white/20 backdrop-blur-sm text-white p-2 rounded-full hover:bg-white/30 transition-colors">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">Gunung Batur</h3>
+                                <p class="text-gray-600 mb-4">Gunung berapi aktif dengan pemandangan sunrise yang spektakuler</p>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center text-yellow-500">
+                                        <i class="fas fa-star"></i>
+                                        <span class="ml-1 text-gray-600">4.7 (987)</span>
+                                    </div>
+                                    <button class="bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-orange-600 transition-colors">
+                                        Lihat Detail
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gallery Section -->
+            <section id="gallery" class="py-16 bg-gray-50">
+                <div class="container mx-auto px-4">
+                    <div class="text-center mb-12 fade-in">
+                        <h2 class="text-4xl font-bold text-gray-900 mb-4">Galeri Foto & Video</h2>
+                        <p class="text-gray-600 max-w-2xl mx-auto">Saksikan keindahan Bali melalui koleksi foto dan video 360° kami</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="relative group cursor-pointer fade-in" onclick="openGalleryModal('image', 1)">
+                            <div class="h-64 bg-gradient-to-br from-purple-400 to-pink-500 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-camera text-6xl text-white opacity-50"></i>
+                            </div>
+                            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+                                <i class="fas fa-search-plus text-white text-2xl"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="relative group cursor-pointer fade-in" onclick="openGalleryModal('video', 1)">
+                            <div class="h-64 bg-gradient-to-br from-red-400 to-pink-500 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-video text-6xl text-white opacity-50"></i>
+                            </div>
+                            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+                                <i class="fas fa-play text-white text-2xl"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="relative group cursor-pointer fade-in" onclick="openGalleryModal('360', 1)">
+                            <div class="h-64 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-vr-cardboard text-6xl text-white opacity-50"></i>
+                            </div>
+                            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+                                <i class="fas fa-expand-arrows-alt text-white text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonials Carousel -->
+            <section class="py-16 bg-white">
+                <div class="container mx-auto px-4">
+                    <div class="text-center mb-12 fade-in">
+                        <h2 class="text-4xl font-bold text-gray-900 mb-4">Testimoni Pengunjung</h2>
+                        <p class="text-gray-600 max-w-2xl mx-auto">Dengarkan pengalaman luar biasa dari para wisatawan</p>
+                    </div>
+                    
+                    <div class="carousel-container relative">
+                        <div class="carousel-track" id="testimonialTrack">
+                            <div class="min-w-full px-4">
+                                <div class="bg-gray-50 rounded-lg p-8 text-center max-w-2xl mx-auto">
+                                    <div class="text-yellow-500 text-2xl mb-4">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <p class="text-gray-600 text-lg mb-6">"Pengalaman yang luar biasa! Bali benar-benar surga dunia. Pelayanan yang ramah dan destinasi yang memukau."</p>
+                                    <div class="flex items-center justify-center">
+                                        <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                                            AS
+                                        </div>
+                                        <div>
+                                            <div class="font-semibold text-gray-900">Andi Setiawan</div>
+                                            <div class="text-gray-600 text-sm">Jakarta, Indonesia</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="min-w-full px-4">
+                                <div class="bg-gray-50 rounded-lg p-8 text-center max-w-2xl mx-auto">
+                                    <div class="text-yellow-500 text-2xl mb-4">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <p class="text-gray-600 text-lg mb-6">"Amazing experience in Bali! The culture, nature, and hospitality are beyond expectations. Highly recommended!"</p>
+                                    <div class="flex items-center justify-center">
+                                        <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                                            JS
+                                        </div>
+                                        <div>
+                                            <div class="font-semibold text-gray-900">John Smith</div>
+                                            <div class="text-gray-600 text-sm">Sydney, Australia</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white shadow-lg rounded-full p-3 hover:bg-gray-50 transition-colors" onclick="previousTestimonial()">
+                            <i class="fas fa-chevron-left text-gray-600"></i>
+                        </button>
+                        <button class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white shadow-lg rounded-full p-3 hover:bg-gray-50 transition-colors" onclick="nextTestimonial()">
+                            <i class="fas fa-chevron-right text-gray-600"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Events Section -->
+            <section id="events" class="py-16 bg-gray-50">
+                <div class="container mx-auto px-4">
+                    <div class="text-center mb-12 fade-in">
+                        <h2 class="text-4xl font-bold text-gray-900 mb-4">Event & Kegiatan</h2>
+                        <p class="text-gray-600 max-w-2xl mx-auto">Ikuti berbagai event menarik dan kegiatan budaya di Bali</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden fade-in">
+                            <div class="h-48 bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                                <i class="fas fa-calendar-alt text-6xl text-white opacity-50"></i>
+                            </div>
+                            <div class="p-6">
+                                <div class="text-orange-500 text-sm font-semibold mb-2">15 Desember 2024</div>
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">Festival Galungan</h3>
+                                <p class="text-gray-600 mb-4">Perayaan hari raya Hindu yang penuh dengan upacara adat dan kebudayaan</p>
+                                <button class="bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-orange-600 transition-colors">
+                                    Lihat Detail
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden fade-in">
+                            <div class="h-48 bg-gradient-to-br from-green-500 to-teal-500 flex items-center justify-center">
+                                <i class="fas fa-music text-6xl text-white opacity-50"></i>
+                            </div>
+                            <div class="p-6">
+                                <div class="text-orange-500 text-sm font-semibold mb-2">20 Desember 2024</div>
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">Bali Arts Festival</h3>
+                                <p class="text-gray-600 mb-4">Festival seni dan budaya dengan pertunjukan tari, musik, dan pameran</p>
+                                <button class="bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-orange-600 transition-colors">
+                                    Lihat Detail
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden fade-in">
+                            <div class="h-48 bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center">
+                                <i class="fas fa-water text-6xl text-white opacity-50"></i>
+                            </div>
+                            <div class="p-6">
+                                <div class="text-orange-500 text-sm font-semibold mb-2">25 Desember 2024</div>
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">Surfing Competition</h3>
+                                <p class="text-gray-600 mb-4">Kompetisi selancar internasional di Pantai Uluwatu</p>
+                                <button class="bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-orange-600 transition-colors">
+                                    Lihat Detail
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Blog Section -->
+            <section id="blog" class="py-16 bg-white">
+                <div class="container mx-auto px-4">
+                    <div class="text-center mb-12 fade-in">
+                        <h2 class="text-4xl font-bold text-gray-900 mb-4">Blog Wisata</h2>
+                        <p class="text-gray-600 max-w-2xl mx-auto">Tips, panduan, dan cerita menarik seputar wisata Bali</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <article class="bg-white rounded-lg shadow-lg overflow-hidden fade-in">
+                            <div class="h-48 bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center">
+                                <i class="fas fa-newspaper text-6xl text-white opacity-50"></i>
+                            </div>
+                            <div class="p-6">
+                                <div class="text-orange-500 text-sm font-semibold mb-2">Travel Tips</div>
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">10 Tips Liburan Hemat di Bali</h3>
+                                <p class="text-gray-600 mb-4">Panduan lengkap untuk menikmati Bali dengan budget terbatas tanpa mengurangi keseruan</p>
+                                <div class="flex items-center justify-between">
+                                    <div class="text-gray-500 text-sm">5 hari yang lalu</div>
+                                    <button class="text-orange-500 hover:text-orange-600 font-semibold">Baca Selengkapnya</button>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <article class="bg-white rounded-lg shadow-lg overflow-hidden fade-in">
+                            <div class="h-48 bg-gradient-to-br from-teal-400 to-blue-500 flex items-center justify-center">
+                                <i class="fas fa-utensils text-6xl text-white opacity-50"></i>
+                            </div>
+                            <div class="p-6">
+                                <div class="text-orange-500 text-sm font-semibold mb-2">Kuliner</div>
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">Kuliner Khas Bali yang Wajib Dicoba</h3>
+                                <p class="text-gray-600 mb-4">Jelajahi cita rasa autentik Bali melalui makanan tradisional yang menggugah selera</p>
+                                <div class="flex items-center justify-between">
+                                    <div class="text-gray-500 text-sm">1 minggu yang lalu</div>
+                                    <button class="text-orange-500 hover:text-orange-600 font-semibold">Baca Selengkapnya</button>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <article class="bg-white rounded-lg shadow-lg overflow-hidden fade-in">
+                            <div class="h-48 bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center">
+                                <i class="fas fa-heart text-6xl text-white opacity-50"></i>
+                            </div>
+                            <div class="p-6">
+                                <div class="text-orange-500 text-sm font-semibold mb-2">Budaya</div>
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">Filosofi Tri Hita Karana dalam Kehidupan Bali</h3>
+                                <p class="text-gray-600 mb-4">Memahami nilai-nilai luhur budaya Bali yang menjadi dasar kehidupan masyarakat</p>
+                                <div class="flex items-center justify-between">
+                                    <div class="text-gray-500 text-sm">2 minggu yang lalu</div>
+                                    <button class="text-orange-500 hover:text-orange-600 font-semibold">Baca Selengkapnya</button>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Sidebar -->
+        <aside class="lg:w-80 bg-white shadow-lg">
+            <div class="sticky top-20 p-6">
+                <!-- Booking Form -->
+                <div class="bg-gradient-to-br from-orange-500 to-pink-500 rounded-lg p-6 text-white mb-6">
+                    <h3 class="text-xl font-bold mb-4">Pesan Sekarang</h3>
+                    <form id="bookingForm" class="space-y-4">
+                        <div>
+                            <label for="destination" class="block text-sm font-medium mb-1">Destinasi</label>
+                            <select id="destination" class="w-full px-3 py-2 text-gray-900 rounded focus:outline-none focus:ring-2 focus:ring-white">
+                                <option>Pilih Destinasi</option>
+                                <option>Pantai Kuta</option>
+                                <option>Pura Tanah Lot</option>
+                                <option>Gunung Batur</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="checkIn" class="block text-sm font-medium mb-1">Tanggal Kunjungan</label>
+                            <input type="date" id="checkIn" class="w-full px-3 py-2 text-gray-900 rounded focus:outline-none focus:ring-2 focus:ring-white">
+                        </div>
+                        <div>
+                            <label for="guests" class="block text-sm font-medium mb-1">Jumlah Tamu</label>
+                            <select id="guests" class="w-full px-3 py-2 text-gray-900 rounded focus:outline-none focus:ring-2 focus:ring-white">
+                                <option>1 Orang</option>
+                                <option>2 Orang</option>
+                                <option>3-5 Orang</option>
+                                <option>6+ Orang</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="w-full bg-white text-orange-500 font-semibold py-2 rounded hover:bg-gray-100 transition-colors">
+                            Pesan Tiket
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Quick Links -->
+                <div class="bg-gray-50 rounded-lg p-6 mb-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Tautan Cepat</h3>
+                    <div class="space-y-3">
+                        <a href="#" class="flex items-center text-gray-600 hover:text-orange-500 transition-colors">
+                            <i class="fas fa-ticket-alt mr-3"></i>
+                            Tiket & Jadwal
+                        </a>
+                        <a href="#" class="flex items-center text-gray-600 hover:text-orange-500 transition-colors">
+                            <i class="fas fa-concierge-bell mr-3"></i>
+                            Fasilitas & Layanan
+                        </a>
+                        <a href="#" class="flex items-center text-gray-600 hover:text-orange-500 transition-colors">
+                            <i class="fas fa-map-marked-alt mr-3"></i>
+                            Peta Lokasi
+                        </a>
+                        <a href="#" class="flex items-center text-gray-600 hover:text-orange-500 transition-colors">
+                            <i class="fas fa-phone mr-3"></i>
+                            Hubungi Kami
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Social Share -->
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Bagikan</h3>
+                    <div class="flex space-x-3">
+                        <button class="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
+                        <button class="bg-blue-400 text-white p-3 rounded-full hover:bg-blue-500 transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </button>
+                        <button class="bg-pink-600 text-white p-3 rounded-full hover:bg-pink-700 transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </button>
+                        <button class="bg-green-600 text-white p-3 rounded-full hover:bg-green-700 transition-colors">
+                            <i class="fab fa-whatsapp"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12 fade-in">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Hubungi Kami</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Ada pertanyaan? Kami siap membantu merencanakan perjalanan Anda</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Contact Form -->
+                <div class="fade-in">
+                    <form id="contactForm" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">Nama Depan</label>
+                                <input type="text" id="firstName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                            </div>
+                            <div>
+                                <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">Nama Belakang</label>
+                                <input type="text" id="lastName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                            <input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        </div>
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon</label>
+                            <input type="tel" id="phone" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Pesan</label>
+                            <textarea id="message" rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-orange-500 text-white font-semibold py-3 rounded-lg hover:bg-orange-600 transition-colors">
+                            Kirim Pesan
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Map & Contact Info -->
+                <div class="fade-in">
+                    <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Informasi Kontak</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-map-marker-alt text-orange-500 mr-4"></i>
+                                <div>
+                                    <div class="font-semibold">Alamat</div>
+                                    <div class="text-gray-600">Jl. Raya Ubud, Gianyar, Bali 80571</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-phone text-orange-500 mr-4"></i>
+                                <div>
+                                    <div class="font-semibold">Telepon</div>
+                                    <div class="text-gray-600">+62 361 123456</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-envelope text-orange-500 mr-4"></i>
+                                <div>
+                                    <div class="font-semibold">Email</div>
+                                    <div class="text-gray-600">info@discoverbali.com</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-clock text-orange-500 mr-4"></i>
+                                <div>
+                                    <div class="font-semibold">Jam Operasional</div>
+                                    <div class="text-gray-600">08:00 - 18:00 WITA</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Map Placeholder -->
+                    <div class="bg-gray-300 rounded-lg h-64 flex items-center justify-center">
+                        <div class="text-center text-gray-600">
+                            <i class="fas fa-map text-4xl mb-2"></i>
+                            <div>Peta Lokasi</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feedback Form -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-2xl mx-auto">
+                <div class="text-center mb-8 fade-in">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Saran & Penilaian</h2>
+                    <p class="text-gray-600">Bantu kami meningkatkan layanan dengan memberikan saran dan penilaian Anda</p>
+                </div>
+                
+                <form id="feedbackForm" class="bg-gray-50 rounded-lg p-8 fade-in">
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Rating Kepuasan</label>
+                        <div class="flex space-x-2">
+                            <button type="button" class="rating-star text-3xl text-gray-300 hover:text-yellow-500 transition-colors" data-rating="1">
+                                <i class="fas fa-star"></i>
+                            </button>
+                            <button type="button" class="rating-star text-3xl text-gray-300 hover:text-yellow-500 transition-colors" data-rating="2">
+                                <i class="fas fa-star"></i>
+                            </button>
+                            <button type="button" class="rating-star text-3xl text-gray-300 hover:text-yellow-500 transition-colors" data-rating="3">
+                                <i class="fas fa-star"></i>
+                            </button>
+                            <button type="button" class="rating-star text-3xl text-gray-300 hover:text-yellow-500 transition-colors" data-rating="4">
+                                <i class="fas fa-star"></i>
+                            </button>
+                            <button type="button" class="rating-star text-3xl text-gray-300 hover:text-yellow-500 transition-colors" data-rating="5">
+                                <i class="fas fa-star"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="feedbackName" class="block text-sm font-medium text-gray-700 mb-2">Nama</label>
+                        <input type="text" id="feedbackName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="feedbackEmail" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input type="email" id="feedbackEmail" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="feedbackMessage" class="block text-sm font-medium text-gray-700 mb-2">Saran & Komentar</label>
+                        <textarea id="feedbackMessage" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Bagikan pengalaman dan saran Anda..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-orange-500 text-white font-semibold py-3 rounded-lg hover:bg-orange-600 transition-colors">
+                        Kirim Feedback
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-mountain text-2xl text-orange-500"></i>
+                        <span class="text-xl font-bold">Discover Bali</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">Jelajahi keindahan Pulau Dewata dengan panduan wisata terlengkap dan terpercaya.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-orange-500 transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-orange-500 transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-orange-500 transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-orange-500 transition-colors">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Destinasi Populer</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-orange-500 transition-colors">Pantai Kuta</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-orange-500 transition-colors">Pura Tanah Lot</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-orange-500 transition-colors">Gunung Batur</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-orange-500 transition-colors">Ubud</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Layanan</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-orange-500 transition-colors">Pemesanan Tiket</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-orange-500 transition-colors">Panduan Wisata</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-orange-500 transition-colors">Virtual Tour</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-orange-500 transition-colors">Konsultasi</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Kontak</h3>
+                    <div class="space-y-2 text-gray-400">
+                        <div class="flex items-center">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            <span>Ubud, Bali, Indonesia</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-phone mr-2"></i>
+                            <span>+62 361 123456</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-envelope mr-2"></i>
+                            <span>info@discoverbali.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 Discover Bali. All rights reserved. | Privacy Policy | Terms of Service</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chatbot -->
+    <div class="chatbot">
+        <button id="chatbotToggle" class="bg-orange-500 text-white p-4 rounded-full shadow-lg hover:bg-orange-600 transition-colors">
+            <i class="fas fa-comments text-xl"></i>
+        </button>
+        
+        <div id="chatbotWindow" class="hidden bg-white rounded-lg shadow-xl w-80 h-96 mb-4">
+            <div class="bg-orange-500 text-white p-4 rounded-t-lg">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-robot mr-2"></i>
+                        <span class="font-semibold">Panduan Wisata Bali</span>
+                    </div>
+                    <button id="closeChatbot" class="hover:bg-orange-600 p-1 rounded">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="p-4 h-64 overflow-y-auto" id="chatMessages">
+                <div class="bg-gray-100 rounded-lg p-3 mb-3">
+                    <p class="text-sm">Halo! Saya asisten virtual Anda. Ada yang bisa saya bantu tentang wisata Bali?</p>
+                </div>
+            </div>
+            
+            <div class="p-4 border-t">
+                <div class="flex space-x-2">
+                    <input type="text" id="chatInput" placeholder="Ketik pesan..." class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    <button id="sendMessage" class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Video Modal -->
+    <div id="videoModal" class="modal">
+        <div class="bg-white rounded-lg p-6 max-w-4xl w-full mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">Video Promosi Bali</h3>
+                <button onclick="closeVideoModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="bg-gray-200 h-64 md:h-96 rounded-lg flex items-center justify-center">
+                <div class="text-center text-gray-600">
+                    <i class="fas fa-play-circle text-6xl mb-4"></i>
+                    <p>Video Player Placeholder</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery Modal -->
+    <div id="galleryModal" class="modal">
+        <div class="bg-white rounded-lg p-6 max-w-4xl w-full mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold" id="galleryModalTitle">Galeri</h3>
+                <button onclick="closeGalleryModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="bg-gray-200 h-64 md:h-96 rounded-lg flex items-center justify-center" id="galleryModalContent">
+                <!-- Content will be dynamically loaded -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentTestimonial = 0;
+        let selectedRating = 0;
+        let isDarkMode = false;
+        let currentLanguage = 'id';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeAnimations();
+            initializeCounters();
+            initializeCarousel();
+            initializeChatbot();
+            initializeForms();
+            initializeFilters();
+            initializeDarkMode();
+            initializeLanguage();
+        });
+
+        // Scroll animations
+        function initializeAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // Counter animation
+        function initializeCounters() {
+            const counters = document.querySelectorAll('.counter');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counter = entry.target;
+                        const target = parseInt(counter.getAttribute('data-target'));
+                        const increment = target / 100;
+                        let current = 0;
+                        
+                        const updateCounter = () => {
+                            if (current < target) {
+                                current += increment;
+                                if (target === 4.8) {
+                                    counter.textContent = current.toFixed(1);
+                                } else {
+                                    counter.textContent = Math.ceil(current).toLocaleString();
+                                }
+                                requestAnimationFrame(updateCounter);
+                            } else {
+                                if (target === 4.8) {
+                                    counter.textContent = target.toFixed(1);
+                                } else {
+                                    counter.textContent = target.toLocaleString();
+                                }
+                            }
+                        };
+                        
+                        updateCounter();
+                        observer.unobserve(counter);
+                    }
+                });
+            });
+            
+            counters.forEach(counter => observer.observe(counter));
+        }
+
+        // Testimonial carousel
+        function initializeCarousel() {
+            setInterval(() => {
+                nextTestimonial();
+            }, 5000);
+        }
+
+        function nextTestimonial() {
+            const track = document.getElementById('testimonialTrack');
+            const totalSlides = track.children.length;
+            currentTestimonial = (currentTestimonial + 1) % totalSlides;
+            track.style.transform = `translateX(-${currentTestimonial * 100}%)`;
+        }
+
+        function previousTestimonial() {
+            const track = document.getElementById('testimonialTrack');
+            const totalSlides = track.children.length;
+            currentTestimonial = currentTestimonial === 0 ? totalSlides - 1 : currentTestimonial - 1;
+            track.style.transform = `translateX(-${currentTestimonial * 100}%)`;
+        }
+
+        // Chatbot functionality
+        function initializeChatbot() {
+            const toggle = document.getElementById('chatbotToggle');
+            const window = document.getElementById('chatbotWindow');
+            const close = document.getElementById('closeChatbot');
+            const sendBtn = document.getElementById('sendMessage');
+            const input = document.getElementById('chatInput');
+
+            toggle.addEventListener('click', () => {
+                window.classList.toggle('hidden');
+            });
+
+            close.addEventListener('click', () => {
+                window.classList.add('hidden');
+            });
+
+            sendBtn.addEventListener('click', sendChatMessage);
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendChatMessage();
+                }
+            });
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const messages = document.getElementById('chatMessages');
+            const message = input.value.trim();
+
+            if (message) {
+                // Add user message
+                const userMsg = document.createElement('div');
+                userMsg.className = 'text-right mb-3';
+                userMsg.innerHTML = `<div class="bg-orange-500 text-white rounded-lg p-3 inline-block max-w-xs"><p class="text-sm">${message}</p></div>`;
+                messages.appendChild(userMsg);
+
+                // Add bot response
+                setTimeout(() => {
+                    const botMsg = document.createElement('div');
+                    botMsg.className = 'mb-3';
+                    botMsg.innerHTML = `<div class="bg-gray-100 rounded-lg p-3 inline-block max-w-xs"><p class="text-sm">${getBotResponse(message)}</p></div>`;
+                    messages.appendChild(botMsg);
+                    messages.scrollTop = messages.scrollHeight;
+                }, 1000);
+
+                input.value = '';
+                messages.scrollTop = messages.scrollHeight;
+            }
+        }
+
+        function getBotResponse(message) {
+            const responses = {
+                'halo': 'Halo! Ada yang bisa saya bantu tentang wisata Bali?',
+                'destinasi': 'Bali memiliki banyak destinasi menarik seperti Pantai Kuta, Pura Tanah Lot, dan Gunung Batur. Mana yang ingin Anda ketahui?',
+                'tiket': 'Untuk informasi tiket, Anda bisa menggunakan form pemesanan di sidebar atau menghubungi kami langsung.',
+                'cuaca': 'Cuaca Bali hari ini cerah berawan dengan suhu 28°C. Cocok untuk berwisata!',
+                'default': 'Terima kasih atas pertanyaannya. Tim kami akan segera membantu Anda. Silakan hubungi customer service untuk informasi lebih detail.'
+            };
+
+            const lowerMessage = message.toLowerCase();
+            for (const key in responses) {
+                if (lowerMessage.includes(key)) {
+                    return responses[key];
+                }
+            }
+            return responses.default;
+        }
+
+        // Form handling
+        function initializeForms() {
+            // Contact form
+            document.getElementById('contactForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                showNotification('Pesan Anda telah terkirim! Kami akan segera menghubungi Anda.', 'success');
+            });
+
+            // Booking form
+            document.getElementById('bookingForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                showNotification('Pemesanan berhasil! Kami akan mengirim konfirmasi ke email Anda.', 'success');
+            });
+
+            // Feedback form
+            document.getElementById('feedbackForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                showNotification('Terima kasih atas feedback Anda! Saran Anda sangat berharga bagi kami.', 'success');
+            });
+
+            // Rating stars
+            document.querySelectorAll('.rating-star').forEach(star => {
+                star.addEventListener('click', (e) => {
+                    const rating = parseInt(e.currentTarget.getAttribute('data-rating'));
+                    selectedRating = rating;
+                    updateStarRating(rating);
+                });
+            });
+        }
+
+        function updateStarRating(rating) {
+            document.querySelectorAll('.rating-star').forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.remove('text-gray-300');
+                    star.classList.add('text-yellow-500');
+                } else {
+                    star.classList.remove('text-yellow-500');
+                    star.classList.add('text-gray-300');
+                }
+            });
+        }
+
+        // Filter functionality
+        function initializeFilters() {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const filter = e.target.getAttribute('data-filter');
+                    
+                    // Update active button
+                    document.querySelectorAll('.filter-btn').forEach(b => {
+                        b.classList.remove('active', 'bg-orange-500', 'text-white');
+                        b.classList.add('bg-gray-200', 'text-gray-700');
+                    });
+                    
+                    e.target.classList.add('active', 'bg-orange-500', 'text-white');
+                    e.target.classList.remove('bg-gray-200', 'text-gray-700');
+                    
+                    // Filter destinations
+                    filterDestinations(filter);
+                });
+            });
+        }
+
+        function filterDestinations(category) {
+            const cards = document.querySelectorAll('.destination-card');
+            
+            cards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'block';
+                    card.classList.add('fade-in');
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Dark mode
+        function initializeDarkMode() {
+            const toggle = document.getElementById('darkModeToggle');
+            const icon = toggle.querySelector('i');
+            
+            toggle.addEventListener('click', () => {
+                isDarkMode = !isDarkMode;
+                document.documentElement.classList.toggle('dark', isDarkMode);
+                
+                if (isDarkMode) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                }
+            });
+        }
+
+        // Language switcher
+        function initializeLanguage() {
+            document.getElementById('languageSwitch').addEventListener('change', (e) => {
+                currentLanguage = e.target.value;
+                // In a real implementation, this would change the page content
+                showNotification(`Language changed to ${currentLanguage === 'id' ? 'Indonesian' : 'English'}`, 'info');
+            });
+        }
+
+        // Modal functions
+        function openVideoModal() {
+            document.getElementById('videoModal').classList.add('active');
+        }
+
+        function closeVideoModal() {
+            document.getElementById('videoModal').classList.remove('active');
+        }
+
+        function openGalleryModal(type, id) {
+            const modal = document.getElementById('galleryModal');
+            const title = document.getElementById('galleryModalTitle');
+            const content = document.getElementById('galleryModalContent');
+            
+            switch(type) {
+                case 'image':
+                    title.textContent = 'Galeri Foto';
+                    content.innerHTML = '<i class="fas fa-image text-6xl text-gray-400 mb-4"></i><p class="text-gray-600">Foto Bali yang Menakjubkan</p>';
+                    break;
+                case 'video':
+                    title.textContent = 'Video Bali';
+                    content.innerHTML = '<i class="fas fa-play-circle text-6xl text-gray-400 mb-4"></i><p class="text-gray-600">Video Promosi Destinasi</p>';
+                    break;
+                case '360':
+                    title.textContent = 'Virtual Tour 360°';
+                    content.innerHTML = '<i class="fas fa-vr-cardboard text-6xl text-gray-400 mb-4"></i><p class="text-gray-600">Pengalaman Virtual Reality</p>';
+                    break;
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeGalleryModal() {
+            document.getElementById('galleryModal').classList.remove('active');
+        }
+
+        function startVirtualTour() {
+            showNotification('Virtual Tour 360° akan segera dimulai!', 'info');
+        }
+
+        // Mobile menu
+        document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        });
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-20 right-4 z-50 p-4 rounded-lg shadow-lg text-white max-w-sm transform translate-x-full transition-transform duration-300`;
+            
+            switch(type) {
+                case 'success':
+                    notification.classList.add('bg-green-500');
+                    break;
+                case 'error':
+                    notification.classList.add('bg-red-500');
+                    break;
+                default:
+                    notification.classList.add('bg-blue-500');
+            }
+            
+            notification.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 5000);
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98f417c7344d9d72',t:'MTc2MDU4MTM5Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
